@@ -1,2 +1,2 @@
-alert('hello');
+window.alert('hello');
 consol.log("error");

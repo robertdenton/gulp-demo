@@ -1,40 +1,59 @@
 var gulp = require('gulp'), 
-htmlclean = require('gulp-htmlclean'),
-uglify = require('gulp-uglify'),
+connect = require('gulp-connect'),
+less = require('gulp-less'),
+minifyCSS = require('gulp-csso')
 mustache = require('gulp-mustache'),
-jshint = require('gulp-jshint');
+uglify = require('gulp-uglify'),
+jshint = require('gulp-jshint'),
+pkg = require('./package.json');
 
-var folders = {
-	src: 'src/',
-	build: 'build/'
-};
+// -------------------------
 
-gulp.task('partials', function(){
-	return gulp.src(folders.src + 'html/**/*')
-	.pipe(mustache({
-		title: 'This is the new title'
-	}))
-	.pipe(gulp.dest(folders.build));
+gulp.task('webserver', function() {
+  connect.server({
+    root: 'build',
+    livereload: true
+  });
+});
+ 
+gulp.task('less', function() {
+  return gulp.src('src/less/main.less')
+    .pipe(less())
+    .pipe(minifyCSS())
+    .pipe(gulp.dest('build/'))
+    .pipe(connect.reload());
 });
 
-gulp.task('html', ['partials'], function(){
-	return gulp.src(folders.src + 'html/**/*')
-	.pipe(htmlclean())
-	.pipe(gulp.dest(folders.build));
+gulp.task('html', function(){
+  return gulp.src('src/html/index.html')
+  .pipe(mustache({
+    title: pkg.meta.title,
+    description: pkg.meta.description
+  }))
+  .pipe(gulp.dest('build/'))
+  .pipe(connect.reload());
 });
 
-gulp.task('jslint', function(){
-	return gulp.src(folders.src + 'js/*.js')
-	.pipe(jshint())
-	.pipe(jshint.reporter('default'));
+gulp.task('js', function(){
+  return gulp.src('src/js/*')
+  .pipe(jshint())
+  .pipe(jshint.reporter('default'))
+  .pipe(uglify())
+  .pipe(gulp.dest('build/js/'));
 });
+ 
+gulp.task('watch', function() {
+    gulp.watch('src/less/**/*', ['less']);
+    gulp.watch('src/html/**/*', ['html']);
+    gulp.watch('src/js/*', ['js']);
+})
 
-gulp.task('uglify', ['jslint'], function(){
-	return gulp.src(folders.src + 'js/**/*')
-	.pipe(uglify())
-	.pipe(gulp.dest(folders.build + 'js/'));
-});
+// ---------------------
 
-gulp.task('dev', ['jslint']);
+gulp.task('serve', ['less', 'html', 'js', 'webserver', 'watch']);
+gulp.task('default', ['less','html','js']);
 
-gulp.task('default', ['html','uglify']);
+
+
+
+ 

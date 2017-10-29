@@ -10,10 +10,16 @@
   "license": "ISC",
   "devDependencies": {
     "gulp": "^3.9.1",
-    "gulp-htmlclean": "^2.7.15",
+    "gulp-connect": "^5.0.0",
+    "gulp-csso": "^3.0.0",
     "gulp-jshint": "^2.0.4",
+    "gulp-less": "^3.3.2",
     "gulp-mustache": "^3.0.0",
     "gulp-uglify": "^3.0.0",
     "jshint": "^2.9.5"
+  },
+  "meta": {
+    "title": "Rob Denton",
+    "description": "Rob is a web guy at a newspaper. This is his website."
   }
 }
