@@ -22,3 +22,6 @@ gulp serve
 gulp
 ```
 
+## Icons
+
+Open-source SVG icons from [simpleicons.org](https://simpleicons.org/).
